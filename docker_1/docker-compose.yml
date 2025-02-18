@@ -1,0 +1,64 @@
+version: '3'
+services:
+  movie_app:
+     image: movie_image
+     container_name: movie_app
+     restart: always
+     ports:
+       - "8000:8000"
+     volumes:
+       - movie-app-data-volume:/data
+     networks:
+       - elk
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.4.0
+    container_name: elasticsearch
+    restart: always
+    environment:
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - discovery.type=single-node
+      - "ELASTIC_PASSWORD=123456"
+    volumes:
+      - elasticsearch-data-volume:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - elk
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.4.0
+    container_name: kibana
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD="123456"
+    ports:
+      - "5601:5601"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+  redis:
+    image: redis:latest
+    container_name: redis
+    volumes:
+      - redis-data-volume:/data 
+    ports:
+      - "6379:6379"
+    networks:
+      - elk
+
+
+networks:
+  elk:
+    driver: bridge
+
+volumes:
+  elasticsearch-data-volume:
+    driver: local
+  redis-data-volume:  
+    driver: local
+  movie-app-data-volume:  
+    driver: local
