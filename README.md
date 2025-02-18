@@ -36,14 +36,14 @@ This project implements a movie search service using Elasticsearch, Redis, and a
 ### Run the Project
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/yasamangodarzi/Docker-Searching-movie-Service.git
    cd <project-directory>
    ```
 2. Run Docker Compose:
    ```bash
    docker-compose up --build
    ```
-3. The search service will be available at `http://localhost:5000/search`.
+3. The search service will be available at `http://localhost:8000/search`.
 
 ---
 
